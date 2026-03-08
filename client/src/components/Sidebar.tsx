@@ -1,9 +1,10 @@
 import React from 'react';
-import type { Role } from '../types';
+
+type Role = 'admin' | 'faculty' | 'counselor' | 'student';
 
 interface SidebarProps {
-  role: Role;
-  page: string;
+  role:    Role;
+  page:    string;
   setPage: (page: string) => void;
 }
 
@@ -11,67 +12,56 @@ const NAV: Record<Role, [string, string][]> = {
   admin: [
     ['📊', 'Dashboard'],
     ['👥', 'Users'],
-    ['📈', 'Analytics']
+    ['📈', 'Analytics'],
+    ['🎓', 'Upload GPA'],
   ],
   faculty: [
     ['📊', 'Dashboard'],
-    ['📤', 'Upload Marks'],
-    ['⭐', 'Behavior Rating']
+    ['📤', 'Upload Data'],      // was 'Upload Marks' — same endpoint, consolidated
+    ['⭐', 'Behavior Rating'],
   ],
   counselor: [
     ['📊', 'Dashboard'],
-    ['📤', 'Upload Data'],
     ['🤖', 'Generate Prediction'],
     ['🎯', 'Risk Analysis'],
-    ['💬', 'Interventions']
+    ['💬', 'Interventions'],
   ],
   student: [
     ['📊', 'Dashboard'],
     ['📈', 'My Progress'],
-    ['🆘', 'Get Help']
+    ['🆘', 'Get Help'],
+    ['🔐', 'Change Password'],
   ],
 };
 
 const ROLE_LABELS: Record<Role, string> = {
-  admin: 'Administrator',
-  faculty: 'Faculty',
+  admin:     'Administrator',
+  faculty:   'Faculty',
   counselor: 'Counselor',
-  student: 'Student',
+  student:   'Student',
 };
 
 const ROLE_BADGE_COLORS: Record<Role, string> = {
-  admin: 'bg-violet-100 text-violet-700',
-  faculty: 'bg-blue-100 text-blue-700',
+  admin:     'bg-violet-100 text-violet-700',
+  faculty:   'bg-blue-100 text-blue-700',
   counselor: 'bg-emerald-100 text-emerald-700',
-  student: 'bg-amber-100 text-amber-700',
-};
-
-const USER_INITIALS: Record<Role, string> = {
-  admin: 'AD',
-  faculty: 'DR',
-  counselor: 'SC',
-  student: 'ST',
-};
-
-const USER_NAMES: Record<Role, string> = {
-  admin: 'Admin',
-  faculty: 'Dr. Roberts',
-  counselor: 'Sarah Chen',
-  student: 'Student',
+  student:   'bg-amber-100 text-amber-700',
 };
 
 export default function Sidebar({ role, page, setPage }: SidebarProps) {
-
-  const nav = NAV[role];
+  // Real user info from localStorage (set during login)
+  const name     = localStorage.getItem('name')  ?? ROLE_LABELS[role];
+  const initials = name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('name');
+    localStorage.removeItem('userId');
     window.location.reload();
   };
 
   return (
-
     <div className="w-60 min-h-screen bg-slate-900 flex flex-col flex-shrink-0">
 
       {/* Logo */}
@@ -89,8 +79,7 @@ export default function Sidebar({ role, page, setPage }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-
-        {nav.map(([icon, label]) => (
+        {NAV[role].map(([icon, label]) => (
           <button
             key={label}
             onClick={() => setPage(label)}
@@ -104,28 +93,20 @@ export default function Sidebar({ role, page, setPage }: SidebarProps) {
             {label}
           </button>
         ))}
-
       </nav>
 
-      {/* User Profile */}
+      {/* User profile */}
       <div className="px-4 py-4 border-t border-slate-800">
-
         <div className="flex items-center gap-3 mb-3">
-
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-white text-xs font-bold">
-            {USER_INITIALS[role]}
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            {initials}
           </div>
-
           <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-semibold truncate">
-              {USER_NAMES[role]}
-            </p>
-
+            <p className="text-white text-xs font-semibold truncate">{name}</p>
             <span className={`text-xs px-1.5 py-0.5 rounded-md font-medium ${ROLE_BADGE_COLORS[role]}`}>
               {ROLE_LABELS[role]}
             </span>
           </div>
-
         </div>
 
         <button
@@ -134,7 +115,6 @@ export default function Sidebar({ role, page, setPage }: SidebarProps) {
         >
           Logout
         </button>
-
       </div>
 
     </div>

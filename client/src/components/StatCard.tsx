@@ -1,12 +1,12 @@
 import React from 'react';
 
-type Accent = 'emerald' | 'red' | 'orange' | 'blue';
+type Accent = 'emerald' | 'red' | 'orange' | 'blue' | 'purple';
 
 interface StatCardProps {
-  icon: string;
-  label: string;
-  value: string | number;
-  sub?: string;
+  icon:    string;
+  label:   string;
+  value:   string | number;
+  sub?:    string;
   accent?: Accent;
 }
 
@@ -15,6 +15,7 @@ const ACCENTS: Record<Accent, string> = {
   red:     'from-red-500 to-rose-600',
   orange:  'from-orange-400 to-amber-500',
   blue:    'from-blue-500 to-indigo-600',
+  purple:  'from-purple-500 to-violet-600',
 };
 
 export default function StatCard({ icon, label, value, sub, accent = 'emerald' }: StatCardProps) {

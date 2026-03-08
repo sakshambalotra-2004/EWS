@@ -1,20 +1,23 @@
 import React from 'react';
-import type { RiskLevel } from '../types';
+
+type RiskLevel = 'critical' | 'high' | 'medium' | 'low';
 
 interface RiskBadgeProps {
   risk: RiskLevel;
 }
 
 const BADGE_CLASSES: Record<RiskLevel, string> = {
-  high:   'bg-red-100 text-red-700 border border-red-200',
-  medium: 'bg-orange-100 text-orange-700 border border-orange-200',
-  low:    'bg-emerald-100 text-emerald-700 border border-emerald-200',
+  critical: 'bg-red-200 text-red-800 border border-red-300',
+  high:     'bg-red-100 text-red-700 border border-red-200',
+  medium:   'bg-orange-100 text-orange-700 border border-orange-200',
+  low:      'bg-emerald-100 text-emerald-700 border border-emerald-200',
 };
 
 const DOT_CLASSES: Record<RiskLevel, string> = {
-  high:   'bg-red-500',
-  medium: 'bg-orange-400',
-  low:    'bg-emerald-500',
+  critical: 'bg-red-700',
+  high:     'bg-red-500',
+  medium:   'bg-orange-400',
+  low:      'bg-emerald-500',
 };
 
 export default function RiskBadge({ risk }: RiskBadgeProps) {
